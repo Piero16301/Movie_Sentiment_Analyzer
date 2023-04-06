@@ -18,6 +18,7 @@ dependencies:
 
 dev_dependencies:
   bloc_test: ^9.1.1
+  flutter_launcher_icons: ^0.12.0
   flutter_test:
     sdk: flutter
   mocktail: ^0.3.0
@@ -26,3 +27,19 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/images/
+
+flutter_icons:
+  android: false
+  ios: false
+  image_path: "assets/images/icon.jpg"
+  web:
+    generate: true
+    image_path: "assets/images/icon.jpg"
+  windows:
+    generate: true
+    image_path: "assets/images/icon.jpg"
+  macos:
+    generate: true
+    image_path: "assets/images/icon.jpg"

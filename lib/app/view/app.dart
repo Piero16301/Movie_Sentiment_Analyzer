@@ -1,4 +1,4 @@
-import 'package:feeling_analysis/counter/counter.dart';
+import 'package:feeling_analysis/home/home.dart';
 import 'package:feeling_analysis/l10n/l10n.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 
@@ -12,7 +12,7 @@ class App extends StatelessWidget {
       theme: FluentThemeData.dark(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const CounterPage(),
+      home: const HomePage(),
     );
   }
 }

@@ -55,7 +55,7 @@ class MovieApiRemote implements IMovieApiRemote {
       ),
     ];
 
-    await Future<void>.delayed(const Duration(seconds: 3));
+    await Future<void>.delayed(const Duration(seconds: 1));
 
     return movies;
   }

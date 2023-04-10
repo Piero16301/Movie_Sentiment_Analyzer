@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   bloc: ^8.1.1
+  dio: ^5.1.1
   equatable: ^2.0.5
   fluent_ui: ^4.4.2
   flutter:
@@ -16,6 +17,12 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.17.0
+  movie_api:
+    path: packages/movie_api
+  movie_api_remote:
+    path: packages/movie_api_remote
+  movie_repository:
+    path: packages/movie_repository
 
 dev_dependencies:
   bloc_test: ^9.1.1

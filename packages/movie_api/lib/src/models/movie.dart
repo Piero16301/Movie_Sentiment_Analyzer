@@ -14,7 +14,7 @@ class Movie extends Equatable {
     required this.title,
     required this.overview,
     required this.posterPath,
-    required this.releaseDate,
+    required this.releaseYear,
   });
 
   /// Crea una instancia de [Movie] desde un [Map]
@@ -24,7 +24,7 @@ class Movie extends Equatable {
   Map<String, dynamic> toJson() => _$MovieToJson(this);
 
   /// Id de la película
-  final int id;
+  final String id;
 
   /// Titulo de la película
   final String title;
@@ -36,7 +36,7 @@ class Movie extends Equatable {
   final String posterPath;
 
   /// Fecha de lanzamiento de la película
-  final DateTime releaseDate;
+  final String releaseYear;
 
   @override
   List<Object?> get props => [
@@ -44,6 +44,6 @@ class Movie extends Equatable {
         title,
         overview,
         posterPath,
-        releaseDate,
+        releaseYear,
       ];
 }

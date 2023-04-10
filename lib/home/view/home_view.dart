@@ -11,7 +11,7 @@ class HomeView extends StatelessWidget {
       appBar: NavigationAppBar(
         title: DefaultTextStyle(
           style: FluentTheme.of(context).typography.subtitle!,
-          child: const Text('Feeling Analysis'),
+          child: const Text('Movie Sentiment Analyzer'),
         ),
         automaticallyImplyLeading: false,
       ),

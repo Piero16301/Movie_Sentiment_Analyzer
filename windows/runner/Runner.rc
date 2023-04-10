@@ -95,7 +95,7 @@ BEGIN
             VALUE "InternalName", "feeling_analysis" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2022 com.les-papus.feeling-analysis. All rights reserved." "\0"
             VALUE "OriginalFilename", "feeling_analysis.exe" "\0"
-            VALUE "ProductName", "Feeling Analysis" "\0"
+            VALUE "ProductName", "Movie Sentiment Analyzer" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

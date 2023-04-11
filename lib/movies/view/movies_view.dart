@@ -59,12 +59,13 @@ class MoviesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(30),
       child: GridView.count(
         crossAxisCount: 4,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+        crossAxisSpacing: 30,
+        mainAxisSpacing: 30,
         childAspectRatio: 3 / 4,
+        physics: const BouncingScrollPhysics(),
         children: movies
             .map(
               (movie) => MovieCard(movie: movie),

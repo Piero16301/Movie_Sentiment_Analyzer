@@ -3,6 +3,7 @@ import 'package:feeling_analysis/movies/movies.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movie_api/movie_api.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MoviesView extends StatefulWidget {
   const MoviesView({super.key});
@@ -249,8 +250,32 @@ class MovieDetailsRow extends StatelessWidget {
             borderRadius: BorderRadius.circular(5),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5),
-              child: const Positioned.fill(
-                child: Placeholder(),
+              child: Positioned.fill(
+                child: SfCircularChart(
+                  legend: Legend(
+                    isVisible: true,
+                    position: LegendPosition.top,
+                    overflowMode: LegendItemOverflowMode.wrap,
+                  ),
+                  // series: [
+                  //   PieSeries<ChartData, String>(
+                  //     dataSource: <ChartData>[
+                  //       ChartData('Action', 35),
+                  //       ChartData('Adventure', 25),
+                  //       ChartData('Comedy', 20),
+                  //       ChartData('Drama', 10),
+                  //       ChartData('Horror', 5),
+                  //       ChartData('Romance', 5),
+                  //     ],
+                  //     xValueMapper: (ChartData data, _) => data.x,
+                  //     yValueMapper: (ChartData data, _) => data.y,
+                  //     dataLabelSettings: const DataLabelSettings(
+                  //       isVisible: true,
+                  //       labelPosition: ChartDataLabelPosition.outside,
+                  //     ),
+                  //   ),
+                  // ],
+                ),
               ),
             ),
           ),

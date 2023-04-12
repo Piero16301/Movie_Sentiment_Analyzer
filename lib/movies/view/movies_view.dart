@@ -177,6 +177,13 @@ class MovieDetails extends StatelessWidget {
   }
 }
 
+class Sentimient {
+  Sentimient(this.sentiment, this.count);
+
+  final String sentiment;
+  final int count;
+}
+
 class MovieDetailsRow extends StatelessWidget {
   const MovieDetailsRow({
     super.key,
@@ -191,8 +198,8 @@ class MovieDetailsRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 200,
-          width: 150,
+          height: 250,
+          width: 175,
           child: Card(
             padding: const EdgeInsets.all(1),
             borderRadius: BorderRadius.circular(5),
@@ -214,7 +221,7 @@ class MovieDetailsRow extends StatelessWidget {
         const SizedBox(width: 20),
         Expanded(
           child: SizedBox(
-            height: 200,
+            height: 250,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -243,8 +250,8 @@ class MovieDetailsRow extends StatelessWidget {
         ),
         const SizedBox(width: 20),
         SizedBox(
-          height: 200,
-          width: 200,
+          height: 250,
+          width: 250,
           child: Card(
             padding: const EdgeInsets.all(1),
             borderRadius: BorderRadius.circular(5),
@@ -257,24 +264,21 @@ class MovieDetailsRow extends StatelessWidget {
                     position: LegendPosition.top,
                     overflowMode: LegendItemOverflowMode.wrap,
                   ),
-                  // series: [
-                  //   PieSeries<ChartData, String>(
-                  //     dataSource: <ChartData>[
-                  //       ChartData('Action', 35),
-                  //       ChartData('Adventure', 25),
-                  //       ChartData('Comedy', 20),
-                  //       ChartData('Drama', 10),
-                  //       ChartData('Horror', 5),
-                  //       ChartData('Romance', 5),
-                  //     ],
-                  //     xValueMapper: (ChartData data, _) => data.x,
-                  //     yValueMapper: (ChartData data, _) => data.y,
-                  //     dataLabelSettings: const DataLabelSettings(
-                  //       isVisible: true,
-                  //       labelPosition: ChartDataLabelPosition.outside,
-                  //     ),
-                  //   ),
-                  // ],
+                  series: [
+                    PieSeries<Sentimient, String>(
+                      animationDelay: 0,
+                      animationDuration: 0,
+                      dataSource: <Sentimient>[
+                        Sentimient('Positive', 5),
+                        Sentimient('Negative', 10),
+                      ],
+                      xValueMapper: (Sentimient data, _) => data.sentiment,
+                      yValueMapper: (Sentimient data, _) => data.count,
+                      dataLabelMapper: (datum, index) => datum.count.toString(),
+                      startAngle: 90,
+                      endAngle: 90,
+                    ),
+                  ],
                 ),
               ),
             ),

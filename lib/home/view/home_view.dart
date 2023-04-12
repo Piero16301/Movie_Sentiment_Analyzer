@@ -17,6 +17,7 @@ class HomeView extends StatelessWidget {
         automaticallyImplyLeading: false,
       ),
       pane: NavigationPane(
+        displayMode: PaneDisplayMode.top,
         selected: context.select<HomeCubit, int>(
           (cubit) => cubit.state.paneIndex,
         ),

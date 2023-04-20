@@ -1,5 +1,6 @@
 import 'package:feeling_analysis/home/home.dart';
 import 'package:feeling_analysis/movies/movies.dart';
+import 'package:feeling_analysis/upload/upload.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,6 +33,11 @@ class HomeView extends StatelessWidget {
             icon: const Icon(FluentIcons.n_u_i_face),
             title: const Text('Sentimientos'),
             body: const Text('Sentimientos'),
+          ),
+          PaneItem(
+            icon: const Icon(FluentIcons.upload),
+            title: const Text('Subir'),
+            body: const UploadPage(),
           ),
         ],
       ),

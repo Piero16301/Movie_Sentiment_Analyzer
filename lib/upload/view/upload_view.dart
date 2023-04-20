@@ -56,7 +56,6 @@ class UploadView extends StatelessWidget {
                   if (state.pickedFile != null) {
                     return Column(
                       children: [
-                        // get filename without extension
                         Text(
                           'ID película: '
                           '${state.pickedFile!.path.split(r'\').last.split('.').first}',
@@ -68,6 +67,7 @@ class UploadView extends StatelessWidget {
                         const SizedBox(height: 20),
                         Expanded(
                           child: SingleChildScrollView(
+                            physics: const BouncingScrollPhysics(),
                             child: Table(
                               children: [
                                 for (final row in state.csvData!)

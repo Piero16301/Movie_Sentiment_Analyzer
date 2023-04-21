@@ -8,10 +8,10 @@ void main() async {
   // Cliente HTTP
   final httpClient = Dio(
     BaseOptions(
-      baseUrl: 'https://demo.com.pe',
-      sendTimeout: const Duration(seconds: 5),
-      connectTimeout: const Duration(seconds: 5),
-      receiveTimeout: const Duration(seconds: 5),
+      baseUrl: 'https://oo3bbe7zo3.execute-api.us-west-2.amazonaws.com',
+      sendTimeout: const Duration(seconds: 10),
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
     ),
   );
 

@@ -36,7 +36,7 @@ class Movie extends Equatable {
   final String posterPath;
 
   /// Fecha de lanzamiento de la película
-  final String releaseYear;
+  final int releaseYear;
 
   @override
   List<Object?> get props => [

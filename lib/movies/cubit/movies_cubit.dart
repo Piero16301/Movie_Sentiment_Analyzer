@@ -17,7 +17,7 @@ class MoviesCubit extends Cubit<MoviesState> {
       emit(
         state.copyWith(
           status: MoviesStatus.success,
-          movies: movies + movies + movies + movies,
+          movies: movies,
         ),
       );
     } on Exception {

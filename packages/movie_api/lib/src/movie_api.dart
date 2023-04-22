@@ -6,4 +6,7 @@ import 'package:movie_api/movie_api.dart';
 abstract class IMovieApiRemote {
   /// Obtener peliculas analizadas
   Future<List<Movie>> getMovies();
+
+  /// Obtener comentarios de una pelicula
+  Future<List<Comment>> getComments(String movieId);
 }

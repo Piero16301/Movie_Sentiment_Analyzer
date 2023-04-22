@@ -18,7 +18,7 @@ class MovieApiRemote implements IMovieApiRemote {
   Future<List<Movie>> getMovies() async {
     try {
       final response = await _httpClient.get<Map<String, dynamic>>(
-        '/default/GetAllMovies',
+        '/GetAllMovies',
       );
 
       if (response.statusCode != 200) throw Exception(response.statusMessage);
@@ -31,6 +31,33 @@ class MovieApiRemote implements IMovieApiRemote {
           .toList();
 
       return movies;
+    } on DioError catch (e) {
+      throw Exception(e.message);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<List<Comment>> getComments(String movieId) async {
+    try {
+      final response = await _httpClient.post<Map<String, dynamic>>(
+        '/GetMovieComments',
+        data: {
+          'idMovie': movieId,
+        },
+      );
+
+      if (response.statusCode != 200) throw Exception(response.statusMessage);
+      if (response.data == null) throw Exception('No data found');
+      if (response.data?['comments'] == null) return [];
+
+      final commentsJson = response.data?['comments'] as List<dynamic>;
+      final comments = commentsJson
+          .map((json) => Comment.fromJson(json as Map<String, dynamic>))
+          .toList();
+
+      return comments;
     } on DioError catch (e) {
       throw Exception(e.message);
     } catch (e) {

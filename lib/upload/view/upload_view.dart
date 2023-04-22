@@ -54,11 +54,16 @@ class UploadView extends StatelessWidget {
               child: BlocBuilder<UploadCubit, UploadState>(
                 builder: (context, state) {
                   if (state.pickedFile != null) {
+                    final fileName = state.pickedFile!.path
+                        .split(r'\')
+                        .last
+                        .split('.')
+                        .first;
                     return Column(
                       children: [
                         Text(
                           'ID película: '
-                          '${state.pickedFile!.path.split(r'\').last.split('.').first}',
+                          '$fileName',
                           style: const TextStyle(
                             fontFamily: 'Ubuntu-Medium',
                             fontSize: 18,

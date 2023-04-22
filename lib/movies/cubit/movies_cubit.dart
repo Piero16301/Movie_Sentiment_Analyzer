@@ -24,4 +24,19 @@ class MoviesCubit extends Cubit<MoviesState> {
       emit(state.copyWith(status: MoviesStatus.failure));
     }
   }
+
+  Future<void> getMovieComments(String movieId) async {
+    emit(state.copyWith(commentsStatus: CommentsStatus.loading));
+    try {
+      final comments = await _movieRepository.getComments(movieId);
+      emit(
+        state.copyWith(
+          commentsStatus: CommentsStatus.success,
+          comments: comments,
+        ),
+      );
+    } on Exception {
+      emit(state.copyWith(commentsStatus: CommentsStatus.failure));
+    }
+  }
 }

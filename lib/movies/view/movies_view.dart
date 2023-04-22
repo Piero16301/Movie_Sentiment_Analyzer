@@ -36,7 +36,35 @@ class _MoviesViewState extends State<MoviesView> {
         if (state.status.isLoading) {
           return const Center(child: ProgressRing());
         } else if (state.status.isFailure) {
-          return const Center(child: Text('Error al cargar las películas'));
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Error al cargar las películas',
+                style: TextStyle(
+                  fontFamily: 'Ubuntu-Medium',
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 30,
+                width: 100,
+                child: FilledButton(
+                  child: const Center(
+                    child: Text(
+                      'Reintentar',
+                      style: TextStyle(
+                        fontFamily: 'Ubuntu-Medium',
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    context.read<MoviesCubit>().getMovies();
+                  },
+                ),
+              ),
+            ],
+          );
         } else {
           if (isMoviesSelected) {
             return MoviesGrid(movies: state.movies);
@@ -92,6 +120,7 @@ class MovieCard extends StatelessWidget {
         onTap: () {
           context.read<AppCubit>().toggleMovies(isMoviesSelected: false);
           context.read<AppCubit>().selectMovie(movie);
+          context.read<MoviesCubit>().getMovieComments(movie.id);
         },
         child: Card(
           padding: const EdgeInsets.all(1),
@@ -150,14 +179,13 @@ class MovieDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
+        Padding(
           padding: const EdgeInsets.all(30),
           child: Column(
             children: [
               MovieDetailsRow(movie: movie),
               const SizedBox(height: 30),
-              MovieComments(movie: movie),
+              Expanded(child: MovieComments(movie: movie)),
             ],
           ),
         ),
@@ -296,88 +324,141 @@ class MovieComments extends StatelessWidget {
   });
 
   final Movie movie;
+  static const sentiments = <int, String>{
+    1: 'POSITIVE',
+    2: 'NEGATIVE',
+    3: 'NEUTRAL',
+  };
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: const [
-            SizedBox(
-              width: 20,
-              child: Center(
-                child: Divider(
-                  direction: Axis.vertical,
-                  size: 30,
-                  style: DividerThemeData(
-                    thickness: 2,
-                    decoration: BoxDecoration(color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 5,
+    return BlocBuilder<MoviesCubit, MoviesState>(
+      builder: (context, state) {
+        if (state.commentsStatus.isLoading) {
+          return const Center(child: ProgressRing());
+        } else if (state.commentsStatus.isSuccess) {
+          if (state.comments.isEmpty) {
+            return const Center(
               child: Text(
-                'Comment',
-                maxLines: 5,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.left,
+                'No existen comentarios para esta película',
                 style: TextStyle(
                   fontFamily: 'Ubuntu-Medium',
-                  fontSize: 14,
                 ),
               ),
-            ),
-            SizedBox(
-              width: 20,
-              child: Center(
-                child: Divider(
-                  direction: Axis.vertical,
-                  size: 30,
-                  style: DividerThemeData(
-                    thickness: 2,
-                    decoration: BoxDecoration(color: Colors.white),
+            );
+          } else {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  Row(
+                    children: const [
+                      SizedBox(
+                        width: 20,
+                        child: Center(
+                          child: Divider(
+                            direction: Axis.vertical,
+                            size: 30,
+                            style: DividerThemeData(
+                              thickness: 2,
+                              decoration: BoxDecoration(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: Text(
+                          'Comment',
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: 'Ubuntu-Medium',
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                        child: Center(
+                          child: Divider(
+                            direction: Axis.vertical,
+                            size: 30,
+                            style: DividerThemeData(
+                              thickness: 2,
+                              decoration: BoxDecoration(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          'Sentiment',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Ubuntu-Medium',
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                        child: Center(
+                          child: Divider(
+                            direction: Axis.vertical,
+                            size: 30,
+                            style: DividerThemeData(
+                              thickness: 2,
+                              decoration: BoxDecoration(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                  ...state.comments.map(
+                    (comment) => CommentRow(
+                      title: comment.title,
+                      comment: comment.content,
+                      date: comment.registerDate,
+                      sentiment: sentiments[comment.idSentiment] ?? 'NEUTRAL',
+                    ),
+                  ),
+                ],
               ),
-            ),
-            Expanded(
-              child: Text(
-                'Sentiment',
-                textAlign: TextAlign.center,
+            );
+          }
+        } else {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Error al cargar los comentarios',
                 style: TextStyle(
                   fontFamily: 'Ubuntu-Medium',
-                  fontSize: 14,
                 ),
               ),
-            ),
-            SizedBox(
-              width: 20,
-              child: Center(
-                child: Divider(
-                  direction: Axis.vertical,
-                  size: 30,
-                  style: DividerThemeData(
-                    thickness: 2,
-                    decoration: BoxDecoration(color: Colors.white),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 30,
+                width: 100,
+                child: FilledButton(
+                  child: const Center(
+                    child: Text(
+                      'Reintentar',
+                      style: TextStyle(
+                        fontFamily: 'Ubuntu-Medium',
+                      ),
+                    ),
                   ),
+                  onPressed: () =>
+                      context.read<MoviesCubit>().getMovieComments(movie.id),
                 ),
               ),
-            ),
-          ],
-        ),
-        ...List.generate(
-          5,
-          (index) => const CommentRow(
-            title: 'A Must-See Silent Comedy',
-            comment:
-                'While perhaps not as celebrated now as some of Chaplin\'s later features "The Kid" is an excellent achievement and a thoroughly enjoyable film. Charlie and young Jackie Coogan make an entertaining and unforgettable pair and there is a lot of good slapstick plus a story that moves quickly and makes you want to know what will happen. Chaplin also wrote a particularly good score for this one and most of the time the music sets off the action very nicely.While it\'s a fairly simple story this is one of Chaplin\'s most efficiently designed movies. Every scene either is necessary to the plot or is very funny for its own sake or both. Except for Chaplin and Coogan most of the other characters (even frequent Chaplin leading lady Edna Purviance) are just there to advance the plot when needed and the two leads are allowed to carry the show which they both do extremely well."The Kid" is also impressive in that while the story is a sentimental one it strikes an ideal balance maintaining sympathy for the characters while never overdoing it with the pathos which Chaplin occasionally lapsed into even in some of his greatest movies. Here the careful balance makes the few moments of real emotion all the more effective and memorable.This is one of Chaplin\'s very best movies by any measure. If you enjoy silent comedies don\'t miss it.',
-            date: '4 March 2002',
-            sentiment: 'Positive',
-          ),
-        ),
-      ],
+            ],
+          );
+        }
+      },
     );
   }
 }

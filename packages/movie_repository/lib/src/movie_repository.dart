@@ -20,4 +20,9 @@ class MovieRepository {
   Future<List<Comment>> getComments(String movieId) async {
     return _movieApiRemote.getComments(movieId);
   }
+
+  /// Obtener sentimientos de una pelicula
+  Future<List<Sentiment>> getSentiments(String movieId) async {
+    return _movieApiRemote.getSentiments(movieId);
+  }
 }

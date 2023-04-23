@@ -64,4 +64,31 @@ class MovieApiRemote implements IMovieApiRemote {
       throw Exception(e.toString());
     }
   }
+
+  @override
+  Future<List<Sentiment>> getSentiments(String movieId) async {
+    try {
+      final response = await _httpClient.post<Map<String, dynamic>>(
+        '/GetCommentSentimentCount',
+        data: {
+          'idMovie': movieId,
+        },
+      );
+
+      if (response.statusCode != 200) throw Exception(response.statusMessage);
+      if (response.data == null) throw Exception('No data found');
+      if (response.data?['sentiments'] == null) return [];
+
+      final sentimentsJson = response.data?['sentiments'] as List<dynamic>;
+      final sentiments = sentimentsJson
+          .map((json) => Sentiment.fromJson(json as Map<String, dynamic>))
+          .toList();
+
+      return sentiments;
+    } on DioError catch (e) {
+      throw Exception(e.message);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

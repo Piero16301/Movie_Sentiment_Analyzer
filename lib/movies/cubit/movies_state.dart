@@ -26,25 +26,25 @@ enum CommentsStatus {
 
 class MoviesState extends Equatable {
   const MoviesState({
-    this.status = MoviesStatus.initial,
+    this.moviesStatus = MoviesStatus.initial,
     this.commentsStatus = CommentsStatus.initial,
-    this.movies = const [],
+    this.movies = const <Movie>[],
     this.comments = const <Comment>[],
   });
 
-  final MoviesStatus status;
+  final MoviesStatus moviesStatus;
   final CommentsStatus commentsStatus;
   final List<Movie> movies;
   final List<Comment> comments;
 
   MoviesState copyWith({
-    MoviesStatus? status,
+    MoviesStatus? moviesStatus,
     CommentsStatus? commentsStatus,
     List<Movie>? movies,
     List<Comment>? comments,
   }) {
     return MoviesState(
-      status: status ?? this.status,
+      moviesStatus: moviesStatus ?? this.moviesStatus,
       commentsStatus: commentsStatus ?? this.commentsStatus,
       movies: movies ?? this.movies,
       comments: comments ?? this.comments,
@@ -53,7 +53,7 @@ class MoviesState extends Equatable {
 
   @override
   List<Object> get props => [
-        status,
+        moviesStatus,
         commentsStatus,
         movies,
         comments,

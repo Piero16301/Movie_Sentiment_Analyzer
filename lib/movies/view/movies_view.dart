@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:feeling_analysis/app/app.dart';
 import 'package:feeling_analysis/movies/movies.dart';
 import 'package:fluent_ui/fluent_ui.dart';
@@ -12,13 +14,39 @@ class MoviesView extends StatefulWidget {
   State<MoviesView> createState() => _MoviesViewState();
 }
 
-class _MoviesViewState extends State<MoviesView> {
+class _MoviesViewState extends State<MoviesView> with WidgetsBindingObserver {
+  late StreamSubscription<void> _subscription;
+
   @override
   void initState() {
-    context.read<MoviesCubit>().getMovies();
-    // context.read<AppCubit>().toggleMovies(isMoviesSelected: true);
-    // context.read<AppCubit>().selectMovie(null);
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+
+    _subscription = Stream<void>.periodic(const Duration(seconds: 5))
+        .listen((_) => context.read<AppCubit>().getMovieSentiments());
+
+    context.read<MoviesCubit>().getMovies();
+    context.read<AppCubit>().toggleMovies(isMoviesSelected: true);
+    context.read<AppCubit>().selectMovie(null);
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _subscription.resume();
+    } else {
+      if (!_subscription.isPaused) {
+        _subscription.pause();
+      }
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
   @override
@@ -33,9 +61,9 @@ class _MoviesViewState extends State<MoviesView> {
     return BlocBuilder<MoviesCubit, MoviesState>(
       bloc: context.read<MoviesCubit>(),
       builder: (context, state) {
-        if (state.status.isLoading) {
+        if (state.moviesStatus.isLoading) {
           return const Center(child: ProgressRing());
-        } else if (state.status.isFailure) {
+        } else if (state.moviesStatus.isFailure) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -197,19 +225,13 @@ class MovieDetails extends StatelessWidget {
             onPressed: () {
               context.read<AppCubit>().toggleMovies(isMoviesSelected: true);
               context.read<AppCubit>().selectMovie(null);
+              context.read<AppCubit>().clearSentiments();
             },
           ),
         ),
       ],
     );
   }
-}
-
-class Sentimient {
-  Sentimient(this.sentiment, this.count);
-
-  final String sentiment;
-  final int count;
 }
 
 class MovieDetailsRow extends StatelessWidget {
@@ -277,42 +299,95 @@ class MovieDetailsRow extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 20),
-        SizedBox(
-          height: 250,
-          width: 250,
-          child: Card(
-            padding: const EdgeInsets.all(1),
-            borderRadius: BorderRadius.circular(5),
-            child: ClipRRect(
+        const SentimentCountVisualizer(),
+      ],
+    );
+  }
+}
+
+class SentimentCountVisualizer extends StatelessWidget {
+  const SentimentCountVisualizer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AppCubit, AppState>(
+      builder: (context, state) {
+        if (state.sentiments.isEmpty) {
+          return SizedBox(
+            height: 250,
+            width: 250,
+            child: Card(
+              padding: const EdgeInsets.all(1),
               borderRadius: BorderRadius.circular(5),
-              child: Positioned.fill(
-                child: SfCircularChart(
-                  legend: Legend(
-                    isVisible: true,
-                    position: LegendPosition.top,
-                    overflowMode: LegendItemOverflowMode.wrap,
-                  ),
-                  series: [
-                    PieSeries<Sentimient, String>(
-                      animationDelay: 0,
-                      animationDuration: 0,
-                      dataSource: <Sentimient>[
-                        Sentimient('Positive', 5),
-                        Sentimient('Negative', 10),
-                      ],
-                      xValueMapper: (Sentimient data, _) => data.sentiment,
-                      yValueMapper: (Sentimient data, _) => data.count,
-                      dataLabelMapper: (datum, index) => datum.count.toString(),
-                      startAngle: 90,
-                      endAngle: 90,
-                    ),
-                  ],
+              child: const Center(
+                child: Text(
+                  'Aún no hay comentarios',
+                  style: TextStyle(fontFamily: 'Ubuntu-Medium'),
                 ),
               ),
             ),
-          ),
-        ),
-      ],
+          );
+        } else {
+          return SizedBox(
+            height: 250,
+            width: 250,
+            child: Card(
+              padding: const EdgeInsets.all(1),
+              borderRadius: BorderRadius.circular(5),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Positioned.fill(
+                  child: SfCircularChart(
+                    palette: [
+                      Colors.blue,
+                      Colors.red,
+                      Colors.purple,
+                    ],
+                    title: ChartTitle(
+                      text: 'Sentimientos',
+                      textStyle: const TextStyle(
+                        fontFamily: 'Ubuntu-Medium',
+                        fontSize: 14,
+                      ),
+                    ),
+                    legend: Legend(isVisible: false),
+                    onTooltipRender: (TooltipArgs args) {
+                      final dataPoints = args.dataPoints as List<Sentiment>?;
+                      args.text =
+                          '${dataPoints![args.pointIndex!.toInt()].sentiment}: '
+                          '${dataPoints[args.pointIndex!.toInt()].count}';
+                    },
+                    tooltipBehavior: TooltipBehavior(enable: true),
+                    series: [
+                      PieSeries<Sentiment, String>(
+                        animationDelay: 0,
+                        animationDuration: 0,
+                        dataSource: state.sentiments,
+                        xValueMapper: (Sentiment data, _) => data.sentiment,
+                        yValueMapper: (Sentiment data, _) => data.count,
+                        dataLabelMapper: (Sentiment data, _) =>
+                            data.count.toString(),
+                        startAngle: 100,
+                        endAngle: 100,
+                        dataLabelSettings: const DataLabelSettings(
+                          isVisible: true,
+                          labelPosition: ChartDataLabelPosition.outside,
+                          textStyle: TextStyle(
+                            fontFamily: 'Ubuntu-Medium',
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }

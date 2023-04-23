@@ -9,4 +9,7 @@ abstract class IMovieApiRemote {
 
   /// Obtener comentarios de una pelicula
   Future<List<Comment>> getComments(String movieId);
+
+  /// Obtener sentimientos de una pelicula
+  Future<List<Sentiment>> getSentiments(String movieId);
 }

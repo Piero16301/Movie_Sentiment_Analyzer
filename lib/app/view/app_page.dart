@@ -20,7 +20,7 @@ class AppPage extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => AppCubit(),
+            create: (_) => AppCubit(_movieRepository),
           ),
         ],
         child: const AppView(),

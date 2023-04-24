@@ -23,7 +23,7 @@ class AppCubit extends Cubit<AppState> {
   }
 
   void clearSentiments() {
-    final sentiments = state.sentiments..clear();
+    final sentiments = <Sentiment>[];
     emit(state.copyWith(sentiments: sentiments));
   }
 

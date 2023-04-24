@@ -29,11 +29,11 @@ class HomeView extends StatelessWidget {
             title: const Text('Películas'),
             body: const MoviesPage(),
           ),
-          PaneItem(
-            icon: const Icon(FluentIcons.n_u_i_face),
-            title: const Text('Sentimientos'),
-            body: const Text('Sentimientos'),
-          ),
+          // PaneItem(
+          //   icon: const Icon(FluentIcons.n_u_i_face),
+          //   title: const Text('Sentimientos'),
+          //   body: const Text('Sentimientos'),
+          // ),
           PaneItem(
             icon: const Icon(FluentIcons.upload),
             title: const Text('Subir'),

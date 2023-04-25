@@ -14,6 +14,7 @@ class MoviesCubit extends Cubit<MoviesState> {
     emit(state.copyWith(moviesStatus: MoviesStatus.loading));
     try {
       final movies = await _movieRepository.getMovies();
+      movies.sort((a, b) => a.releaseYear.compareTo(b.releaseYear));
       emit(
         state.copyWith(
           moviesStatus: MoviesStatus.success,
@@ -29,6 +30,7 @@ class MoviesCubit extends Cubit<MoviesState> {
     emit(state.copyWith(commentsStatus: CommentsStatus.loading));
     try {
       final comments = await _movieRepository.getComments(movieId);
+      comments.sort((a, b) => a.idSentiment.compareTo(b.idSentiment));
       emit(
         state.copyWith(
           commentsStatus: CommentsStatus.success,

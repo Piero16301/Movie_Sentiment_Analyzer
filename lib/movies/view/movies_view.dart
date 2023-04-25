@@ -4,6 +4,7 @@ import 'package:feeling_analysis/app/app.dart';
 import 'package:feeling_analysis/movies/movies.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hovering/hovering.dart';
 import 'package:movie_api/movie_api.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -118,7 +119,7 @@ class MoviesGrid extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(30),
       child: GridView.count(
-        crossAxisCount: 4,
+        crossAxisCount: 7,
         crossAxisSpacing: 30,
         mainAxisSpacing: 30,
         childAspectRatio: 3 / 4,
@@ -160,30 +161,54 @@ class MovieCard extends StatelessWidget {
                 Positioned.fill(
                   child: Image.network(
                     movie.posterPath,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fitWidth,
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      FluentIcons.file_image,
+                      color: Colors.white,
+                      size: 40,
+                    ),
                     loadingBuilder: (context, child, loadingProgress) =>
                         loadingProgress == null
                             ? child
                             : const Center(child: ProgressRing()),
                   ),
                 ),
-                Container(
-                  height: double.infinity,
-                  width: double.infinity,
-                  color: Colors.black.withOpacity(0.3),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Center(
-                      child: Text(
-                        movie.title,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontFamily: 'Ubuntu-Medium',
-                          fontSize: 18,
-                          color: Colors.white,
+                SizedBox.expand(
+                  child: HoverWidget(
+                    hoverChild: ColoredBox(
+                      color: Colors.black.withOpacity(0.4),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              movie.title,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              style: const TextStyle(
+                                fontFamily: 'Ubuntu-Medium',
+                                fontSize: 18,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              '(${movie.releaseYear})',
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontFamily: 'Ubuntu-Medium',
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
+                    onHover: (event) {},
+                    child: const SizedBox.shrink(),
                   ),
                 ),
               ],
@@ -423,6 +448,7 @@ class MovieComments extends StatelessWidget {
             );
           } else {
             return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               child: Column(
                 children: [
                   Row(

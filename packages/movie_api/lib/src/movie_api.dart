@@ -12,4 +12,7 @@ abstract class IMovieApiRemote {
 
   /// Obtener sentimientos de una pelicula
   Future<List<Sentiment>> getSentiments(String movieId);
+
+  /// Subir archivo csv
+  Future<void> uploadFile(String fileName, String filePath);
 }

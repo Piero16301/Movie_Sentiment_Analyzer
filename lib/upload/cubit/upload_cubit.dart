@@ -4,11 +4,14 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movie_repository/movie_repository.dart';
 
 part 'upload_state.dart';
 
 class UploadCubit extends Cubit<UploadState> {
-  UploadCubit() : super(const UploadState());
+  UploadCubit(this._movieRepository) : super(const UploadState());
+
+  final MovieRepository _movieRepository;
 
   Future<void> pickFile() async {
     final pickedFile = await FilePicker.platform.pickFiles(
@@ -41,7 +44,11 @@ class UploadCubit extends Cubit<UploadState> {
   Future<void> sendFile() async {
     emit(state.copyWith(status: UploadStatus.loading));
     try {
-      await Future<void>.delayed(const Duration(seconds: 2));
+      final fileName = state.pickedFile!.path.split(r'\').last;
+      final filePath = state.pickedFile!.path;
+
+      await _movieRepository.uploadFile(fileName, filePath);
+
       final csvData = <List<String>>[];
       emit(
         state.copyWith(

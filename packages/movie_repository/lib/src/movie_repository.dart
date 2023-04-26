@@ -25,4 +25,9 @@ class MovieRepository {
   Future<List<Sentiment>> getSentiments(String movieId) async {
     return _movieApiRemote.getSentiments(movieId);
   }
+
+  /// Subir archivo csv
+  Future<void> uploadFile(String fileName, String filePath) async {
+    return _movieApiRemote.uploadFile(fileName, filePath);
+  }
 }

@@ -91,4 +91,29 @@ class MovieApiRemote implements IMovieApiRemote {
       throw Exception(e.toString());
     }
   }
+
+  @override
+  Future<void> uploadFile(String fileName, String filePath) async {
+    try {
+      final uploadClient = Dio(
+        BaseOptions(
+          baseUrl: 'https://74qg9o1f2j.execute-api.us-east-1.amazonaws.com/v2',
+          sendTimeout: const Duration(seconds: 10),
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
+        ),
+      );
+      final response = await uploadClient.put<Map<String, dynamic>>(
+          '/rawuteclespapus/$fileName',
+          data: FormData.fromMap({
+            'thefile': await MultipartFile.fromFile(filePath),
+          }));
+
+      if (response.statusCode != 200) throw Exception(response.statusMessage);
+    } on DioError catch (e) {
+      throw Exception(e.message);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

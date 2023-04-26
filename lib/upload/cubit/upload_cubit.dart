@@ -32,6 +32,7 @@ class UploadCubit extends Cubit<UploadState> {
         state.copyWith(
           pickedFile: File(pickedFile.files.single.path!),
           csvData: csvData,
+          isFileSelected: true,
         ),
       );
     }
@@ -41,7 +42,14 @@ class UploadCubit extends Cubit<UploadState> {
     emit(state.copyWith(status: UploadStatus.loading));
     try {
       await Future<void>.delayed(const Duration(seconds: 2));
-      emit(state.copyWith(status: UploadStatus.success, pickedFile: null));
+      final csvData = <List<String>>[];
+      emit(
+        state.copyWith(
+          status: UploadStatus.success,
+          isFileSelected: false,
+          csvData: csvData,
+        ),
+      );
     } catch (e) {
       emit(state.copyWith(status: UploadStatus.failure));
     }

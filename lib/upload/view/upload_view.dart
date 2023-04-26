@@ -53,7 +53,7 @@ class UploadView extends StatelessWidget {
             Expanded(
               child: BlocBuilder<UploadCubit, UploadState>(
                 builder: (context, state) {
-                  if (state.pickedFile != null) {
+                  if (state.isFileSelected) {
                     final fileName = state.pickedFile!.path
                         .split(r'\')
                         .last

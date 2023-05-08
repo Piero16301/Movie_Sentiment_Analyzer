@@ -11,7 +11,7 @@ dependencies:
   dio: ^5.1.1
   equatable: ^2.0.5
   file_picker: ^5.2.10
-  fluent_ui: ^4.4.2
+  fluent_ui: ^4.5.1
   flutter:
     sdk: flutter
   flutter_bloc: ^8.1.2

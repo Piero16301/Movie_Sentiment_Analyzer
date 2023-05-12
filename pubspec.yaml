@@ -34,7 +34,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mocktail: ^0.3.0
-  msix: ^3.11.0
+  msix: ^3.12.1
   very_good_analysis: ^4.0.0+1
 
 flutter:

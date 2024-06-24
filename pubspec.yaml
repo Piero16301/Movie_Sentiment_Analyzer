@@ -26,7 +26,7 @@ dependencies:
   movie_repository:
     path: packages/movie_repository
   syncfusion_flutter_charts: ^21.1.39
-  syncfusion_flutter_core: ^21.1.39
+  syncfusion_flutter_core: ^21.2.10
 
 dev_dependencies:
   bloc_test: ^9.1.1
